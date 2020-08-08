@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+
+  drupal:
+    build:
+      context: ./
+      dockerfile: development/portal.dockerfile
+    ports:
+      - 8085:80
+    volumes:
+      - /usr/local/var/www/docker/docker/portal/web/modules:/var/www/html/modules
+      - /usr/local/var/www/docker/docker/portal/web/profiles:/var/www/html/profiles
+      - /usr/local/var/www/docker/docker/portal/web/themes:/var/www/html/themes
+      - /usr/local/var/www/docker/docker/portal/web/libraries:/var/www/html/libraries
+      - /usr/local/var/www/docker/docker/portal/web/sites:/var/www/html/sites
+      - /usr/local/var/www/docker/docker/portal/web/vendor:/var/www/html/vendor
+      # this takes advantage of the feature in Docker that a new anonymous
+      # volume (which is what we're creating here) will be initialized with the
+      # existing content of the image at the same location
+      #- /var/www/html/sites
+    restart: always
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: portal
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123123
+      MYSQL_ROOT_PASSWORD: 123123
+    restart: always
